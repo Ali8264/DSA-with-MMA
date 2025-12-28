@@ -1,0 +1,103 @@
+Matrix Chain Multiplication (MCM) is the father of interval DP problems.
+Matrix Chain Multiplication (MCM)
+You are given an array arr[] of size N.
+The i-th matrix has dimensions
+👉 (arr[i-1] × arr[i])
+You must multiply all matrices in order
+You can add brackets anywhere
+Goal: minimize total scalar multiplications
+⚠️ Matrix multiplication is associative but NOT commutative
+
+---------------------(Intuition)
+
+Different parenthesizations → different costs.
+👉 We must decide where to split the matrix chain.
+This is a Partition / Interval DP problem.
+-----------
+Why Greedy / Brute Force Fails ❌
+Number of ways to parenthesize grows exponentially
+We must try all possible partitions smartly using DP
+
+DP State Definition
+dp[i][j] = minimum number of scalar multiplications
+           needed to multiply matrices from i to j
+
+
+Here:
+Matrix Mi has dimension arr[i-1] × arr[i]
+i and j refer to matrix indices, not array indices
+DP Meaning (Very Important)
+dp[i][j] represents the minimum cost to multiply
+the chain of matrices Mi × Mi+1 × ... × Mj
+
+How to Explain in Interview (Say This)
+
+“Matrix Chain Multiplication is an interval DP problem.
+I define dp[i][j] as the minimum cost to multiply matrices from i to j.
+For every possible partition k, I compute left cost, right cost, and the multiplication cost, and take the minimum.”
+
+
+----------------------Interviewer-----------------
+If interviewer wants very short explanation, say this:
+
+“Matrix Chain Multiplication is an interval DP problem.
+I define f(i, j) as the minimum cost to multiply matrices from i to j.
+I try all split points k and compute left cost, right cost, and multiplication cost.
+Using memoization, the solution runs in O(N³) time.”
+
+--------------- Memoization (Top-Down DP) ---------------
+int solve(int i, int j, vector<int>& arr, vector<vector<int>>& dp) {
+    if (i == j) return 0;
+
+    if (dp[i][j] != -1) return dp[i][j];
+
+    int ans = INT_MAX;
+
+    for (int k = i; k < j; k++) {
+        int cost = solve(i, k, arr, dp)
+                 + solve(k + 1, j, arr, dp)
+                 + arr[i - 1] * arr[k] * arr[j];
+
+        ans = min(ans, cost);
+    }
+
+    return dp[i][j] = ans;
+}
+
+int matrixMultiplication(vector<int>& arr) {
+    int n = arr.size();
+    vector<vector<int>> dp(n, vector<int>(n, -1));
+    return solve(1, n - 1, arr, dp);
+}
+
+-------------------Time Complexity---------------
+Input:
+arr = [2, 1, 3, 4]
+
+
+Matrices:
+
+M1 = 2×1
+
+M2 = 1×3
+
+M3 = 3×4
+
+Possible splits:
+
+1️⃣ (M1 × M2) × M3
+
+(2×1×3) + (2×3×4) = 30
+
+
+2️⃣ M1 × (M2 × M3)
+
+(1×3×4) + (2×1×4) = 20 ✅
+
+
+✔ Answer = 20
+
+Time & Space Complexity
+Metric	Value
+Time	O(N³)
+Space	O(N²)
