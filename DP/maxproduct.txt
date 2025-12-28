@@ -1,0 +1,38 @@
+/*
+LeetCode 152: Maximum Product Subarray
+Pattern: Dynamic Programming (Kadane Variant)
+
+Approach:
+- Track maxProduct and minProduct at each index
+- Negative number can flip min to max
+- Update global answer at each step
+
+Time: O(n)
+Space: O(1)
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int maxProduct(vector<int>& nums) {
+    int maxProd = nums[0];
+    int minProd = nums[0];
+    int ans = nums[0];
+
+    for (int i = 1; i < nums.size(); i++) {
+        int curr = nums[i];
+
+        int tempMax = max({curr, curr * maxProd, curr * minProd});
+        minProd = min({curr, curr * maxProd, curr * minProd});
+        maxProd = tempMax;
+
+        ans = max(ans, maxProd);
+    }
+
+    return ans;
+}
+int main() {
+    vector<int> nums = {2, 3, -2, 4};
+    cout << "Maximum Product Subarray: " << maxProduct(nums) << endl;
+    return 0;
+}
