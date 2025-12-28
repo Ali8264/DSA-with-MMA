@@ -1,0 +1,38 @@
+You can either take an item completely or not take it at all
+👉 This is why it’s called 0/1 Knapsack
+Goal: maximize total value
+Total weight ≤ W
+
+DP State Definition
+dp[i][w] = maximum value using first i items with knapsack capacity w
+
+
+How to Explain in Interview (Say This)
+
+“0/1 Knapsack is a classic DP problem where at each item we decide 
+whether to pick or skip it. I define a DP table where dp[i][w] represents 
+the maximum value using first i items with capacity w.”
+---------------Optimal Solution---------------
+int knapSack(int W, vector<int>& wt, vector<int>& val, int n) {
+    vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
+
+    for (int i = 1; i <= n; i++) {
+        for (int w = 0; w <= W; w++) {
+            if (wt[i - 1] <= w) {
+                dp[i][w] = max(
+                    dp[i - 1][w],
+                    val[i - 1] + dp[i - 1][w - wt[i - 1]]
+                );
+            } else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+
+    return dp[n][W];
+}
+
+Time & Space Complexity
+Metric	Value
+Time	O(N × W)
+Space	O(N × W)
