@@ -1,0 +1,60 @@
+Max Sum Increasing Subsequence (MSIS)
+
+You are given an array of positive integers.
+You need to:
+Choose a subsequence (not necessarily contiguous)
+Elements must be strictly increasing
+Among all such subsequences, maximize the sum
+🎯 Goal:
+Return the maximum possible sum of an increasing subsequence
+------------(Intuition)---------
+
+This problem is very similar to Longest Increasing Subsequence (LIS).
+👉 Difference:
+LIS → maximize length
+MSIS → maximize sum
+So instead of storing lengths, we store sums.
+-------------Approach----------------
+How to Explain in Interview (Say This)
+
+“This is a variation of LIS.
+Instead of tracking length, I track the maximum sum ending at each index.
+For each element, I try extending all smaller previous elements and take the maximum sum.
+--------------- Optimal Solution (DP) ---------------
+int maxSumIS(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> dp(n);
+
+    // Base case: each element alone
+    for (int i = 0; i < n; i++) {
+        dp[i] = arr[i];
+    }
+
+    // DP computation
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (arr[j] < arr[i]) {
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+            }
+        }
+    }
+
+    // Answer is max value in dp
+    return *max_element(dp.begin(), dp.end());
+}
+
+-------------------Example Dry Insight
+Input:
+arr = [1, 101, 2, 3, 100]
+
+dp building:
+dp = [1, 102, 3, 6, 106]
+
+
+✔ Maximum sum = 106
+
+Subsequence → [1, 2, 3, 100]
+Time & Space Complexity
+Metric	Value
+Time	O(n²)
+Space	O(n)
