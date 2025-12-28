@@ -1,0 +1,64 @@
+Idea
+Try all subsequences
+Check which are increasing
+Track maximum length
+
+Reality
+Total subsequences = 2ⁿ
+Impossible for n = 2500
+❌ Rejected immediately
+
+Optimal Approach 1: DP (O(n²)) ✅
+ DP Definition
+dp[i] = length of LIS ending at index i
+
+/*
+LeetCode 300: Longest Increasing Subsequence
+Pattern: Dynamic Programming
+
+Time Complexity: O(n^2)
+Space Complexity: O(n)
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n, 1);  // each element is LIS of length 1
+
+    int ans = 1;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (nums[j] < nums[i]) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        ans = max(ans, dp[i]);
+    }
+
+    return ans;
+}
+
+-------------------Optimal Appraoch--------------
+Pattern: Greedy + Binary Search
+
+Time Complexity: O(n log n)
+Space Complexity: O(n)
+
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> temp;
+
+    for (int x : nums) {
+        auto it = lower_bound(temp.begin(), temp.end(), x);
+
+        if (it == temp.end()) {
+            temp.push_back(x);
+        } else {
+            *it = x;
+        }
+    }
+
+    return temp.size();
+}
