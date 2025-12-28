@@ -1,0 +1,65 @@
+Brute Force Thinking (Why DP Is Needed)
+Naive idea:
+
+Generate all subsequences of text1
+
+Check which are subsequences of text2
+
+Pick the longest
+
+Why impossible:
+
+Subsequence count = 2ⁿ
+
+n ≤ 1000 → impossible
+
+❌ Brute force rejected → DP required
+
+------------------------Optimal-------------------
+/*
+LeetCode 1143: Longest Common Subsequence
+Pattern: Dynamic Programming (2D DP)
+
+Time Complexity: O(n * m)
+Space Complexity: O(n * m)
+*/
+“I use dynamic programming where dp[i][j] represents the LCS length of prefixes
+ of both strings. If characters match, I extend the result;
+otherwise, I take the maximum by skipping one character. 
+This gives O(n × m) time.”
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int longestCommonSubsequence(string text1, string text2) {
+    int n = text1.size();
+    int m = text2.size();
+
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            if (text1[i - 1] == text2[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    return dp[n][m];
+}
+
+Dry Run (VERY IMPORTANT)
+Example 1:
+text1 = "abcde"
+text2 = "ace"
+DP table (simplified):
+
+|   | a | c | e |
+| - | - | - | - |
+| a | 1 | 1 | 1 |
+| b | 1 | 1 | 1 |
+| c | 1 | 2 | 2 |
+| d | 1 | 2 | 2 |
+| e | 1 | 2 | 3 |
