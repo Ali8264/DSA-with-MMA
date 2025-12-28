@@ -1,0 +1,61 @@
+DP Meaning (Very Important)
+dp[i][j] = minimum number of edits needed
+           to convert first i characters of word1
+           into first j characters of word2
+
+Base Cases (Like Knapsack Capacity = 0)
+dp[0][j] = j    // insert all j characters--Empty → non-empty → only insertions
+dp[i][0] = i    // delete all i characters---Non-empty → empty → only deletions
+
+How to Explain in Interview (Say This)
+
+“Edit Distance is a classic string DP problem.
+I define dp[i][j] as the minimum operations needed to convert the first i characters of word1 into the first j characters of word2.
+At each step, I consider insert, delete, and replace operations and take the minimum.”
+
+-----------------Optimal------------------------
+int minDistance(string word1, string word2) {
+    int n = word1.size();
+    int m = word2.size();
+
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+
+    // Base cases
+    for (int i = 0; i <= n; i++) dp[i][0] = i;
+    for (int j = 0; j <= m; j++) dp[0][j] = j;
+
+    // Fill DP table
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            if (word1[i - 1] == word2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = 1 + min({
+                    dp[i][j - 1],    // insert
+                    dp[i - 1][j],    // delete
+                    dp[i - 1][j - 1] // replace
+                });
+            }
+        }
+    }
+
+    return dp[n][m];
+}
+
+Input:
+word1 = "horse"
+word2 = "ros"
+
+
+Operations:
+
+horse → rorse (replace)
+rorse → rose  (delete)
+rose  → ros   (delete)
+
+
+✔ Answer = 3
+Time & Space Complexity
+Metric	Value
+Time	O(n × m)
+Space	O(n × m)
