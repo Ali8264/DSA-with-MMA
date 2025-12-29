@@ -1,0 +1,57 @@
+Input 
+grid =
+[
+ [1, 3, 1],
+ [1, 5, 1],
+ [4, 2, 1]
+]
+
+
+✅ DP Table After Completion
+i\j	0	1	2
+0	1	4	5
+1	2	7	6
+2	6	8	7
+🎯 Final Output
+Minimum Path Sum = 7
+------------------------------------------------------
+class Solution {
+public:
+int f(int i,int j,vector<vector<int>>&dp,vector<vector<int>>&grid){
+    if(i<0 || j<0)return INT_MAX;
+    if(i==0 and j==0)return grid[0][0];
+    if(dp[i][j]!=-1)return dp[i][j];
+    int up=f(i-1,j,dp,grid);
+    int left=f(i,j-1,dp,grid);
+    return dp[i][j]=grid[i][j]+min(up,left);
+}
+
+    int minPathSum(vector<vector<int>>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
+        vector<vector<int>>dp(n,vector<int>(m,-1));
+        return f(n-1,m-1,dp,grid);
+    }
+};
+
+
+
+---------------------------------------Time Complexity------------------
+⏰ Time Complexity: O(n × m)
+
+Why?
+
+Each cell (i,j) is computed only once
+
+Memoization avoids repeated recursion
+
+📦 Space Complexity: O(n × m)
+
+dp table → O(n × m)
+
+Recursion stack → O(n + m) (worst path)
+
+🗣️ Interview-ready explanation (2 lines)
+
+“I use recursion with memoization where each state represents the minimum path sum to reach a cell. Each cell is computed once, giving O(nm) time and space complexity.”
+

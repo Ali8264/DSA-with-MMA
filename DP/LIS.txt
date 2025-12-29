@@ -62,3 +62,20 @@ int lengthOfLIS(vector<int>& nums) {
 
     return temp.size();
 }
+
+🔢 Input
+nums = [10, 9, 2, 5, 3, 7, 101, 18]
+
+🧮 Dry Run Table
+Step	Current Number (x)	lower_bound Position	Action Taken	temp After Step
+1	        10                           end         push_back(10)	        [10]
+2       	9	                          0     	replace temp[0] = 9	    [9]
+3	        2	                          0     	replace temp[0] = 2	    [2]
+4	        5	                        end	        push_back(5)	        [2, 5]
+5	        3	                          1     	replace temp[1] = 3	    [2, 3]
+6       	7	                        end     	push_back(7)	        [2, 3, 7]
+7       	101	                        end	        push_back(101)	        [2, 3, 7, 101]
+8	        18                         	3       	replace temp[3] = 18	 [2, 3, 7, 18]
+
+🎯 Final Result
+Length of LIS = temp.size() = 4
