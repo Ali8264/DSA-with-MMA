@@ -1,0 +1,43 @@
+Interview Explanation (Paragraph)
+
+“I solved the coin change problem using recursion with memoization.
+ I define a DP state where f(i, amount) represents
+  the minimum number of coins needed to make a given amount using coins 
+  from index 0 to i. At each step, I have two choices: either 
+   don’t take the current coin and move to the previous index,
+    or I take the coin and reduce the amount while staying at the same index since coins can be reused.
+     I store the result of each state in a DP table to avoid recomputation.
+      Since there are n × amount possible states and each state takes constant time,
+       the overall time and space complexity is O(n × amount)
+       . If it’s not possible to form the amount, I return -1.
+
+
+
+
+
+
+
+
+class Solution {
+public:
+   int f(int i,int amount,vector<int>&coins,vector<vector<int>>&dp){
+    if(i==0){
+        if(amount%coins[i]==0)return amount/coins[i];
+        else return 1e9;
+    }
+    if(dp[i][amount]!=-1)return dp[i][amount];
+    int notTake=f(i-1,amount,coins,dp);
+    int take=1e9;
+    if(amount>=coins[i])take=1+f(i,amount-coins[i],coins,dp);
+    return dp[i][amount]=min(take,notTake);
+   }
+
+    int coinChange(vector<int>& coins, int amount) {
+       int  n=coins.size();
+        vector<vector<int>>dp(n,vector<int>(amount+1,-1));
+        int tt=1e9;
+        tt=f(n-1,amount,coins,dp);
+        if(tt!=1e9)return tt;
+        else return -1;
+    }
+};
