@@ -1,0 +1,42 @@
+🗣️ Interview Explanation (Paragraph)
+
+“I solve the Partition Equal Subset Sum problem using dynamic programming with recursion and memoization. 
+First, I calculate the total sum of the array; if it’s odd, it’s impossible to divide it into two equal subsets,
+ so I return false. Otherwise, I set the target as half of the total sum. I define a recursive function 
+ where f(i, tar) checks whether it’s possible to achieve sum tar using elements from index 0 to i.
+  At each step, I have two choices: either exclude the current element or include it if the remaining target allows.
+   I store the result of each state in a DP table to avoid recomputation. 
+   Since each state is computed once and there are n × target states,
+    the solution runs in O(n × target) time and space.”
+
+    ----------------------------------------
+
+class Solution {
+public:
+    bool f(int i,int tar,vector<int>&nums,vector<vector<int>>&dp){
+        if(tar==0)return true;
+        if(i==0){
+            if(tar==nums[i])return true;
+            else return false;
+        }
+        if(dp[i][tar]!=-1)return dp[i][tar];
+        bool nottake=f(i-1,tar,nums,dp);
+        bool take=0;
+        if(tar-nums[i]>=0){
+            take=f(i-1,tar-nums[i],nums,dp);
+        }
+        return dp[i][tar]=take|nottake;
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum=0;
+        for(auto it:nums)sum+=it;
+        int tar=sum/2;
+        int n=nums.size();
+        if(sum%2==1)return false;
+        vector<vector<int>>dp(n,vector<int>(tar+1,-1));
+        return f(n-1,tar,nums,dp);
+    }
+};
+
+
