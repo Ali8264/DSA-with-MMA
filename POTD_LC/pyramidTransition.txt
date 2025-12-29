@@ -1,0 +1,70 @@
+Call Stack Visualization
+dfs("BCD",0,"")
+ └── dfs("BCD",1,"C")
+      └── dfs("BCD",2,"CE")
+           └── dfs("CE",0,"")
+                └── dfs("CE",1,"A")
+                     └── dfs("A",0,"") ✅
+                    
+-----------------------------------------------------------------------------------------                    
+
+class Solution {
+    unordered_map<string,vector<char>>mpp;
+public:
+//i-->current index in bottom
+//temp-->temporary string for next row
+//bottom-->current bottom row
+    bool dfs(string bottom,int i,string temp){
+        //pyramid succesfully built
+    if(bottom.size()==1)return true;
+    //if we finished building the next row
+    if(i==bottom.size()-1){
+        string nextRow;
+        return dfs(temp,0,nextRow);
+    }
+    //take current adj pair
+    string key=bottom.substr(i,2);
+    for(char v:mpp[key]){
+        temp.push_back(v);//choose
+        if(dfs(bottom,i+1,temp))return true;//choose+valid pyramid
+        temp.pop_back();//backtrack
+    }
+    return false;
+
+    }
+
+    bool pyramidTransition(string bottom, vector<string>& allowed) {
+        for(auto &a:allowed)mpp[a.substr(0,2)].push_back(a[2]);
+        string temp;
+        return dfs(bottom,0,temp);
+    }
+};
+
+-------------------------------------------------------------------------------------------
+✅ Best Case: O(n)
+When?
+There is only one valid path
+Or the first choice itself builds the full pyramid
+Why?
+DFS goes straight to the top
+No backtracking happens
+📌 Example:
+"BCD" → "CE" → "A"
+❌ Worst Case: Exponential (≈ O(kⁿ²))
+When?
+Multiple choices exist for each adjacent pair
+All paths must be tried before concluding false
+Why?
+Each pair can have up to k choices (k ≤ 6)
+All combinations are explored
+📌 Example:
+"AAAA" with many valid transitions
+📦 Space Complexity
+✅ Best Case: O(n)
+Recursion depth is minimal
+Only one path explored
+❌ Worst Case: O(n²) (effectively O(1))
+Maximum recursion depth (≤ 6)
+Temporary strings built at each level
+🗣️ Interview-Perfect Summary (2 Lines)
+“The best-case time complexity is linear when a valid pyramid is found early. The worst-case time complexity is exponential due to backtracking, but constraints are small. Space complexity is constant in practice.”
